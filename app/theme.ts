@@ -1,33 +1,112 @@
-import {Dimensions} from 'react-native'
+import { Dimensions } from 'react-native'
 
-const colors = {
+export type Colors = {
+  brand: {
+    primary: string
+    secondary: string
+    background: string
+    light: string
+    dark: string
+    disabled: string
+  }
+  neutral: {
+    soft: string
+    accent: string
+  }
+  semantic: {
+    error: string
+    alert: string
+    success: string
+    transparent: string
+  }
+  grayscale: {
+    black: string
+    veryDarkGrey: string
+    darkGrey: string
+    mediumGrey: string
+    lightGrey: string
+    veryLightGrey: string
+    white: string
+  }
+  gradient: {
+    foreground: Array<string>
+    background: Array<string>
+  }
+}
+
+export type ColorObject = {
+  dark: Colors
+  light: Colors
+}
+
+const colors: ColorObject = {
   dark: {
     brand: {
-      main: '#00529E',
-      foreground: '#2273B4',
-      disabled: '#D4E4F0',
-      dark: '#003468',
-      background: '#ACC4E9',
-      faded: '#5C7B94',
+      primary: '#C01ABD',
+      secondary: '#FF6F61',
+      background: '#E6E6FA',
+      light: '#F4A582',
+      dark: '#8B008B',
+      disabled: 'rgba(192, 26, 189, 0.4)',
+    },
+    neutral: {
+      soft: '#FFC0CB',
+      accent: '#20B2AA',
     },
     semantic: {
-      main: '#DF7D21',
-      foreground: '#F1AD2E',
-      background: '#F3C342',
-      alert: '#74172D',
-      success: '#33823C',
-      backgroundOpacity: 'rgba(18, 18, 18, 0.4)'
+      error: '#C83A3A',
+      alert: '#FFCC99',
+      success: '#32CD32',
+      transparent: 'rgba(18, 18, 18, 0.4)',
     },
     grayscale: {
       black: '#121212',
+      veryDarkGrey: '#7D7D7D',
       darkGrey: '#3D3D3D',
-      grey: '#7D7D7D',
       mediumGrey: '#ACACAC',
       lightGrey: '#EBEBEB',
       veryLightGrey: '#F6F6F6',
       white: '#FCFCFC',
     },
-}}
+    gradient: {
+      foreground: ['#C01ABD', '#FF6F61'],
+      background: ['#C01ABD', '#E6E6FA'],
+    },
+  },
+  light: {
+    brand: {
+      primary: '#C01ABD',
+      secondary: '#FF6F61',
+      background: '#E6E6FA',
+      light: '#F4A582',
+      dark: '#8B008B',
+      disabled: 'rgba(192, 26, 189, 0.4)',
+    },
+    neutral: {
+      soft: '#FFC0CB',
+      accent: '#20B2AA',
+    },
+    semantic: {
+      error: '#C83A3A',
+      alert: '#FFCC99',
+      success: '#32CD32',
+      transparent: 'rgba(18, 18, 18, 0.4)',
+    },
+    grayscale: {
+      black: '#121212',
+      veryDarkGrey: '#7D7D7D',
+      darkGrey: '#3D3D3D',
+      mediumGrey: '#ACACAC',
+      lightGrey: '#EBEBEB',
+      veryLightGrey: '#F6F6F6',
+      white: '#FCFCFC',
+    },
+    gradient: {
+      foreground: ['#C01ABD', '#FF6F61'],
+      background: ['#C01ABD', '#E6E6FA'],
+    },
+  },
+}
 
 const fontSize = {
   xxs: 8,
@@ -79,11 +158,9 @@ const fontWeight: any = {
 
 const { height, width } = Dimensions.get('window')
 
-const headerStyle = {
+const headerStyle = {}
 
-}
-
-const theme = {
+const _theme = {
   colors,
   fontSize,
   fontWeight,
@@ -91,7 +168,7 @@ const theme = {
   borderRadius,
   borderWidth,
   height,
-  width
+  width,
 }
 
-export default theme
+export default _theme

@@ -5,7 +5,7 @@ import React, {
   useContext,
   useState,
 } from 'react'
-import theme from '../theme'
+import theme, { ColorObject, Colors } from '../theme'
 import { useStore } from './reducers/store'
 import { DispatchAction } from './reducers/reducer'
 
@@ -25,7 +25,7 @@ export interface ThemeContext {
   activeTheme: ThemeType
   setActiveTheme: (theme: ThemeType) => void
   themeName: string
-  active: any
+  theme: Colors
   defaultScreenOptions: any
 }
 
@@ -39,11 +39,11 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({
   const [state, dispatch] = useStore()
   const activeTheme = state.settings.theme
   const themeName = ThemeName[activeTheme]
-  const active = colors[activeTheme]
+  const theme = colors[activeTheme]
 
   const defaultScreenOptions = {
     headerStyle: {
-      backgroundColor: colors[activeTheme].brand.foreground,
+      backgroundColor: colors[activeTheme].brand.primary,
     },
     headerTintColor: colors[activeTheme].grayscale.white,
     headerTitleStyle: { fontWeight: fontWeight.bold },
@@ -66,7 +66,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({
         activeTheme,
         setActiveTheme,
         themeName,
-        active,
+        theme,
         defaultScreenOptions,
       }}>
       {children}
