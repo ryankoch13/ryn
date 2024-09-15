@@ -1,7 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import type { OnboardingState, State, SettingsState } from '../../types/state'
-import { LocalStorageKeys, IntroProgress } from '../../utils/constants'
+import { LocalStorageKeys } from '../../utils/constants'
+import { IntroProgress } from '../../types/navigation'
+import { ThemeType } from '../theme'
 
 enum StateDispatchAction {
     STATE_LOADED = 'state/stateLoaded',
@@ -10,7 +12,8 @@ enum StateDispatchAction {
 
 enum SettingsDispatchAction {
     DISPLAY_NAME_UPDATED = 'preferences/usernameUpdated',
-    BIOMETRICS_UPDATED = 'preferences/biometricsUpdated'
+    BIOMETRICS_UPDATED = 'preferences/biometricsUpdated',
+    THEME_UPDATED = 'preferences/themeUpdated'
 }
 
 enum AuthenticationDispatchAction {
@@ -62,6 +65,32 @@ export const reducer = (state: State, action: ReducerAction<DispatchAction>): St
             return newState
             // return state
         }
+        case SettingsDispatchAction.BIOMETRICS_UPDATED: {
+            const choice = (action?.payload ?? [false]).pop()
+            const settings: SettingsState = {
+                ...state.settings,
+                biometrics: choice as boolean,
+            }
+            const newState = {
+                ...state,
+                settings,
+            }
+            AsyncStorage.setItem(LocalStorageKeys.Settings, JSON.stringify(settings))
+            return newState
+        }
+        case SettingsDispatchAction.THEME_UPDATED: {
+            const choice = (action?.payload ?? [false]).pop()
+            const settings: SettingsState = {
+                ...state.settings,
+                theme: choice as ThemeType,
+            }
+            const newState = {
+                ...state,
+                settings,
+            }
+            AsyncStorage.setItem(LocalStorageKeys.Settings, JSON.stringify(settings))
+            return newState
+        }
         case OnboardingDispatchAction.ONBOARDING_COMPLETE: {
             const onboarding: OnboardingState = {
               ...state.onboarding,
@@ -71,7 +100,7 @@ export const reducer = (state: State, action: ReducerAction<DispatchAction>): St
               ...state,
               onboarding,
             }
-            AsyncStorage.setItem(LocalStorageKeys.Onboarding, JSON.stringify(newState.onboarding))
+            AsyncStorage.setItem(LocalStorageKeys.Intro, JSON.stringify(newState.onboarding))
             return newState
           }
         // additional dispatch cases

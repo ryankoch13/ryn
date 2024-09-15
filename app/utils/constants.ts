@@ -1,8 +1,10 @@
 import {Dimensions} from 'react-native'
+import { ThemeType } from '../contexts/theme'
 
 export enum LocalStorageKeys {
-    Onboarding = 'OnboardingState',
+    Intro = 'IntroState',
     Settings = 'SettingsState',
+    Theme = 'Theme',
 }
 
 export enum KeychainServices {

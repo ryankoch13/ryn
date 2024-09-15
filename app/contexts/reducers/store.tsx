@@ -4,12 +4,15 @@ import { getVersion, getBuildNumber } from 'react-native-device-info'
 import { reducer, ReducerAction } from './reducer'
 import { State } from '../../types/state'
 import { LanguageModel } from '../../types/models'
+import { ThemeName, ThemeType } from '../theme'
 
 export const initialState: State = {
     stateLoaded: false,
     settings: {
         username: '',
         model: LanguageModel.Default,
+        biometrics: false,
+        theme: ThemeType.light,
     },
     appVersion: {
         build: getBuildNumber(),

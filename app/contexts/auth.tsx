@@ -7,7 +7,7 @@ export interface AuthContext {
     setPIN: (value: string) => Promise<any>
     checkPIN: (value: string) => Promise<void>
     setBiometrics: (value: boolean) => Promise<void>
-    checkBiometrics: (value: string) => Promise<void>
+    checkBiometrics: () => Promise<void>
     authenticated: boolean
     setAuthenticated: Dispatch<SetStateAction<boolean>>
 }
