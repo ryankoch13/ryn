@@ -11,6 +11,7 @@ export type Channel = {
     content: string;
     sender?: User;
     image?: string;
+    user?: User;
   };
   
   export type User = {
