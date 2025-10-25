@@ -9,8 +9,8 @@ export default function HomeLayout() {
             <Stack.Screen name='channel/[id]' 
             options={{
                 headerBackButtonDisplayMode: 'minimal',
-                headerLargeTitle: true, 
-                headerTransparent: true,
+                // headerLargeTitle: true, 
+                // headerTransparent: true,
                 title: 'Channel',
             }}
             />
