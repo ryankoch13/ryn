@@ -1,3 +1,5 @@
+import { Tables } from "./database.types";
+
 export type Channel = {
     id: string;
     name: string;
@@ -14,12 +16,4 @@ export type Channel = {
     user?: User;
   };
   
-  export type User = {
-    id: string;
-    first_name: string;
-    last_name: string;
-    full_name: string;
-    avatar_url?: string | null;
-    created_at: string;
-    updated_at: string;
-  };
+  export type User = Tables<'users'>

@@ -16,16 +16,16 @@ export default function TabsLayout() {
         <NativeTabs.Trigger name="chat">
           <Label>Chat</Label>
           <Icon
+            src={<VectorIcon family={MaterialCommunityIcons} name="home" />}
             sf="message.fill"
             drawable="custom_android_drawable"
-            src={<VectorIcon family={MaterialCommunityIcons} name="home" />}
           />
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="settings">
           <Icon
+            src={<VectorIcon family={MaterialCommunityIcons} name="cog" />}
             sf="gear"
             drawable="custom_settings_drawable"
-            src={<VectorIcon family={MaterialCommunityIcons} name="cog" />}
           />
           <Label>Settings</Label>
         </NativeTabs.Trigger>
