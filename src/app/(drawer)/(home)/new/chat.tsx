@@ -7,7 +7,7 @@ export default function NewChat() {
         console.log('user', user.first_name)
     }
     return (
-        <View className="bg-white">
+        <View className="bg-white flex-1">
             <UserList onPress={handleUserPress} />
         </View>
     )
