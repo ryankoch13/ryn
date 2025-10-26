@@ -45,7 +45,7 @@ export default function MessageInput() {
     >
       <SafeAreaView
         edges={["bottom"]}
-        className="p-3 pb-0 gap-4 bg-white border-t border-gray-200"
+        className="p-3 pb-0 gap-4 bg-white border-t border-gray-200 rounded-t-2xl"
       >
         {image && <View className="w-32 h-32">
             <Image source={{uri: image}} className="w-full h-full rounded-md" />
