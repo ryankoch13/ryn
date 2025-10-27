@@ -18,21 +18,20 @@ import { Channel, Message } from "@/types";
 import { useChannel } from "@/providers/ChannelProvider";
 
 export default function MessageInput() {
-  const {channel} = useChannel()
+  const {channel, realTimeChannel} = useChannel()
   const [message, setMessage] = useState<string>("");
   const [image, setImage] = useState<string | null>(null);
 
   const supabase = useSupabase();
   const { user } = useUser();
-  const queryCleint = useQueryClient();
-
+  const queryClient = useQueryClient();
   const newMessage = useMutation({
     mutationFn: async () => {
       const { data } = await supabase
         .from("messages")
         .insert({
           content: message,
-          user_id: user!.id,
+          user_id: user.id,
           channel_id: channel.id,
         })
         .select("*")
@@ -40,19 +39,16 @@ export default function MessageInput() {
         .throwOnError();
       return data;
     },
-    onMutate: async (message, queryCleint) => {
-      await queryCleint.client.cancelQueries({ queryKey: ["messages"] });
-      const previousMessages = queryCleint.client.getQueryData(["messages"]);
-      queryCleint.client.setQueryData(["messages"], (old: Message[]) => [
-        ...old,
-        message,
-      ]);
-      return { previousMessages };
-    },
-    onSuccess() {
-      queryCleint.invalidateQueries({ queryKey: ["messages", channel.id] });
-      setImage(null);
-      setMessage("");
+    onSuccess(newMessage) {
+      queryClient.invalidateQueries({ queryKey: ["messages", channel.id] });
+
+      if (realTimeChannel) {
+        realTimeChannel.send({
+          type: 'broadcast',
+          event: 'message_sent',
+          payload: newMessage,
+        });
+      }
     },
     onError(error) {
       Alert.alert("Failed", error.message);
@@ -61,6 +57,7 @@ export default function MessageInput() {
   const handleSend = () => {
     newMessage.mutate();
     setImage(null);
+    setMessage("");
   };
 
   const pickImage = async () => {
