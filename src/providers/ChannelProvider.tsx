@@ -50,6 +50,7 @@ export default function ChannelProvider({
     },
   });
 
+//   real time chat
   useEffect(() => {
     // Join a room/topic. Can be anything except for 'realtime'.
     const realTimeChannel = supabase.channel(`channel:${id}:messages`);
