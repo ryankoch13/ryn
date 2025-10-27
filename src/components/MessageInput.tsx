@@ -11,42 +11,53 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSupabase } from "@/providers/SupabaseProvider";
 import { useUser } from "@clerk/clerk-expo";
-import { Channel } from "@/types";
+import { Channel, Message } from "@/types";
 
 export default function MessageInput({ channel }: { channel: Channel }) {
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState<string>("");
   const [image, setImage] = useState<string | null>(null);
 
   const supabase = useSupabase();
   const { user } = useUser();
+  const queryCleint = useQueryClient();
 
   const newMessage = useMutation({
     mutationFn: async () => {
       const { data } = await supabase
-        .from('messages')
+        .from("messages")
         .insert({
           content: message,
           user_id: user!.id,
           channel_id: channel.id,
         })
-        .select('*')
+        .select("*")
         .single()
         .throwOnError();
       return data;
     },
+    onMutate: async (message, queryCleint) => {
+      await queryCleint.client.cancelQueries({ queryKey: ["messages"] });
+      const previousMessages = queryCleint.client.getQueryData(["messages"]);
+      queryCleint.client.setQueryData(["messages"], (old: Message[]) => [
+        ...old,
+        message,
+      ]);
+      return { previousMessages };
+    },
     onSuccess() {
-      setMessage("")
-      setImage(null)
+      queryCleint.invalidateQueries({ queryKey: ["messages", channel.id] });
+      setImage(null);
+      setMessage("");
     },
     onError(error) {
-      Alert.alert("Failed", error.message)
-    }
+      Alert.alert("Failed", error.message);
+    },
   });
   const handleSend = () => {
-    newMessage.mutate()
+    newMessage.mutate();
     setImage(null);
   };
 

@@ -13,11 +13,11 @@ export default function NewChat() {
   const createChannel = useMutation({
     mutationFn: async (clickedUser: User) => {
       // Create channel if it doesn't exist
-      const {data: channel} = await supabase
+      const { data: channel } = await supabase
         .from("channels")
         .insert({ type: "direct" })
         .throwOnError()
-        .select('*')
+        .select("*")
         .single();
 
       if (!channel) {
@@ -31,21 +31,21 @@ export default function NewChat() {
       // Add user to the channel
       await supabase
         .from("channel_users")
-        .insert({ channel_id: channel.id, user_id: clickedUser.id }).
-        throwOnError();
+        .insert({ channel_id: channel.id, user_id: clickedUser.id })
+        .throwOnError();
 
-    //  Add self to the channel
-    await supabase
+      //  Add self to the channel
+      await supabase
         .from("channel_users")
-        .insert({ channel_id: channel.id, user_id: user.id }).
-        throwOnError();
+        .insert({ channel_id: channel.id, user_id: user.id })
+        .throwOnError();
 
       return channel;
     },
     onSuccess(newChannel) {
-        router.back()
-        router.push(`/channel/${newChannel.id}`)
-    }
+      router.back();
+      router.push(`/channel/${newChannel.id}`);
+    },
   });
 
   const handleUserPress = (user: User) => {
