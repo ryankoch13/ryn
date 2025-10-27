@@ -10,7 +10,7 @@ import { useUser } from "@clerk/clerk-expo";
 
 export default function ChannelScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  
+
   const { user } = useUser();
   const supabase = useSupabase();
 
@@ -53,8 +53,8 @@ export default function ChannelScreen() {
   return (
     <>
       <Stack.Screen options={{ title: channelName }} />
-      <MessageList />
-      <MessageInput />
+      <MessageList channel={channel} />
+      <MessageInput channel={channel} />
     </>
   );
 }
