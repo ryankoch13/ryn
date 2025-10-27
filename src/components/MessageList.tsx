@@ -1,0 +1,53 @@
+import { ActivityIndicator, FlatList, Text } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import messages from "@/data/messages";
+import MessageListItem from "./MessageListItem";
+import { useQuery } from "@tanstack/react-query";
+import { Channel } from "@/types";
+import { useSupabase } from "@/providers/SupabaseProvider";
+import { useUser } from "@clerk/clerk-expo";
+import { useChannel } from "@/providers/ChannelProvider";
+
+export default function MessageList() {
+    const {channel} = useChannel();
+    const supabase = useSupabase()
+  const { user } = useUser();
+
+//   TODO: Pagination
+
+  const {
+    data: messages,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["messages", channel.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("messages")
+        .select("*")
+        .eq("channel_id", channel.id)
+        .order('created_at', {ascending: false})
+        .throwOnError();
+      return data;
+    },
+  });
+
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+
+  return (
+    <FlatList
+      data={messages}
+      contentContainerClassName="p-4"
+      renderItem={({ item }) => (
+        <MessageListItem
+          message={item}
+          isOwnMessage={item.user_id === user?.id}
+        />
+      )}
+      showsVerticalScrollIndicator={false}
+      inverted
+    />
+  );
+}
