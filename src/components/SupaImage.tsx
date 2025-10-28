@@ -13,10 +13,10 @@ export default function SupaImage({path, ...imageProps}: SupaImageProps) {
     const {data} = useQuery({
         queryKey: ['supa-image', path],
         queryFn: async () => {
-            const {data} = supabase.storage.from('images'
-            ).getPublicUrl(path)
+            const {data} = await supabase.storage.from('images'
+            ).createSignedUrl(path, 3600, {download: true})
 
-            return data.publicUrl
+            return data?.signedUrl;
         },
     })
     return (

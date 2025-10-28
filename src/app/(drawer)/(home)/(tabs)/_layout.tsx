@@ -16,14 +16,14 @@ export default function TabsLayout() {
         <NativeTabs.Trigger name="chat">
           <Label>Chat</Label>
           <Icon
-            src={<VectorIcon family={MaterialCommunityIcons} name="home" />}
+            src={<VectorIcon family={Ionicons} name="home" />}
             sf="message.fill"
             drawable="custom_android_drawable"
           />
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="settings">
           <Icon
-            src={<VectorIcon family={MaterialCommunityIcons} name="cog" />}
+            src={<VectorIcon family={Ionicons} name="cog" />}
             sf="gear"
             drawable="custom_settings_drawable"
           />
@@ -31,7 +31,7 @@ export default function TabsLayout() {
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="search" role="search">
           <Icon
-            src={<VectorIcon family={MaterialCommunityIcons} name="magnify" />}
+            src={<VectorIcon family={Ionicons} name="search" />}
             sf="magnifyingglass"
             drawable="custom_android_drawable"
           />
@@ -43,11 +43,21 @@ export default function TabsLayout() {
     return (
       <Tabs>
         <Tabs.Screen
-          name="index"
+          name="chat"
           options={{
             title: "Chat",
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="chatbox" size={size} color={color} />
+            ),
+            headerShown: false,
+          }}
+        />
+        <Tabs.Screen
+          name="search"
+          options={{
+            title: "Search",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="search" size={size} color={color} />
             ),
           }}
         />

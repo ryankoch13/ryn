@@ -17,7 +17,7 @@ type ChannelContext = {
 };
 const ChannelContext = createContext({
   channel: null,
-  realTimeChannel: null
+  realTimeChannel: null,
 });
 
 type ChannelProviderProps = PropsWithChildren<{
@@ -29,9 +29,10 @@ export default function ChannelProvider({
   id,
 }: ChannelProviderProps) {
   const supabase = useSupabase();
-  const [realTimeChannel, setRealTimeChannel] = useState<RealtimeChannel | null>();
+  const [realTimeChannel, setRealTimeChannel] =
+    useState<RealtimeChannel | null>();
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const {
     data: channel,
@@ -50,14 +51,17 @@ export default function ChannelProvider({
     },
   });
 
-//   real time chat
+  //   real time chat
   useEffect(() => {
     // Join a room/topic. Can be anything except for 'realtime'.
     const realTimeChannel = supabase.channel(`channel:${id}:messages`);
     // Simple function to log any messages we receive
     function messageReceived(payload) {
-    //   console.log(payload);
-      queryClient.setQueryData(['messages', id], (oldData: any) => [payload.payload, ...oldData])
+      //   console.log(payload);
+      queryClient.setQueryData(["messages", id], (oldData: any) => [
+        payload.payload,
+        ...oldData,
+      ]);
     }
     // Subscribe to the Channel
     realTimeChannel.on(
@@ -69,18 +73,18 @@ export default function ChannelProvider({
      * Sending a message after subscribing will use Websockets
      */
     realTimeChannel.subscribe((status) => {
-        if (status !=='SUBSCRIBED') {
-            return null
-        }
-      setRealTimeChannel(realTimeChannel)
+      if (status !== "SUBSCRIBED") {
+        return null;
+      }
+      setRealTimeChannel(realTimeChannel);
     });
-    
+
     return () => {
-        if (realTimeChannel) {
-            supabase.removeChannel(realTimeChannel)
-        setRealTimeChannel(null)
-        }
-    }
+      if (realTimeChannel) {
+        supabase.removeChannel(realTimeChannel);
+        setRealTimeChannel(null);
+      }
+    };
   }, []);
 
   if (isLoading) {
