@@ -71,23 +71,26 @@ export type Database = {
       messages: {
         Row: {
           channel_id: string | null
-          content: string | null
+          content: string
           created_at: string
           id: string
+          image: string | null
           user_id: string | null
         }
         Insert: {
           channel_id?: string | null
-          content?: string | null
+          content: string
           created_at?: string
           id?: string
+          image?: string | null
           user_id?: string | null
         }
         Update: {
           channel_id?: string | null
-          content?: string | null
+          content?: string
           created_at?: string
           id?: string
+          image?: string | null
           user_id?: string | null
         }
         Relationships: [

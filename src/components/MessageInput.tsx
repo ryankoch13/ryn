@@ -16,51 +16,56 @@ import { useSupabase } from "@/providers/SupabaseProvider";
 import { useUser } from "@clerk/clerk-expo";
 import { Channel, Message } from "@/types";
 import { useChannel } from "@/providers/ChannelProvider";
+import { uploadImage } from "@/utils/storage";
 
 export default function MessageInput() {
-  const {channel} = useChannel()
+  const {channel, realTimeChannel} = useChannel()
   const [message, setMessage] = useState<string>("");
   const [image, setImage] = useState<string | null>(null);
 
   const supabase = useSupabase();
   const { user } = useUser();
-  const queryCleint = useQueryClient();
-
+  const queryClient = useQueryClient();
   const newMessage = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (image: string | null) => {
       const { data } = await supabase
         .from("messages")
         .insert({
           content: message,
-          user_id: user!.id,
+          user_id: user.id,
           channel_id: channel.id,
+          image,
         })
         .select("*")
         .single()
         .throwOnError();
       return data;
     },
-    onMutate: async (message, queryCleint) => {
-      await queryCleint.client.cancelQueries({ queryKey: ["messages"] });
-      const previousMessages = queryCleint.client.getQueryData(["messages"]);
-      queryCleint.client.setQueryData(["messages"], (old: Message[]) => [
-        ...old,
-        message,
-      ]);
-      return { previousMessages };
-    },
-    onSuccess() {
-      queryCleint.invalidateQueries({ queryKey: ["messages", channel.id] });
+    onSuccess(newMessage) {
+      queryClient.invalidateQueries({ queryKey: ["messages", channel.id] });
+
+      if (realTimeChannel) {
+        realTimeChannel.send({
+          type: 'broadcast',
+          event: 'message_sent',
+          payload: newMessage,
+        });
+      }
       setImage(null);
-      setMessage("");
+    setMessage("");
     },
     onError(error) {
       Alert.alert("Failed", error.message);
     },
   });
-  const handleSend = () => {
-    newMessage.mutate();
-    setImage(null);
+  const handleSend = async () => {
+    let supaImage: string | null = null;
+    if (image) {
+      supaImage = await uploadImage(supabase, image)
+    }
+    console.log(message, image)
+    newMessage.mutate(supaImage);
+    
   };
 
   const pickImage = async () => {
